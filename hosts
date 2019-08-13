@@ -1,0 +1,16 @@
+[localhost]
+127.0.0.1 ansible_connection=local
+
+[aws]
+13.115.206.70
+
+[aws:vars]
+ansible_user=ec2-user
+ansible_ssh_private_key_file=/Users/yuki/Desktop/test.pem
+
+[vagrant]
+192.168.33.10
+
+[vagrant:vars]
+ansible_user=vagrant
+ansible_ssh_private_key_file=/Users/yuki/.vagrant.d/boxes/co7/0/virtualbox/vagrant_private_key

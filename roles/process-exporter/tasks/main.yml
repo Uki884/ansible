@@ -1,0 +1,53 @@
+---
+- name: check exist prometheus
+  stat:
+    path: /usr/local/src/prometheus
+  register: prometheus
+- name: check exist process-exporter
+  stat:
+    path: /usr/local/src/prometheus/process-exporter
+  register: file
+- name: create prometheus directory
+  file: path=/usr/local/src/prometheus state=directory owner=root group=root mode=0755
+  when: not prometheus.stat.exists
+- name: wget process-exporter
+  get_url:
+    url: https://github.com/ncabatoff/process-exporter/releases/download/v0.5.0/process-exporter-0.5.0.linux-amd64.tar.gz
+    dest: /usr/local/src/prometheus/process-exporter-0.5.0.linux-amd64.tar.gz
+  when: not file.stat.exists
+- name: unarchive  process-exporter
+  unarchive:
+    src: /usr/local/src/prometheus/process-exporter-0.5.0.linux-amd64.tar.gz
+    remote_src: yes
+    dest: /usr/local/src/prometheus/
+  when: not file.stat.exists
+- name: mv process-exporter binary
+  shell: mv /usr/local/src/prometheus/process-exporter-0.5.0.linux-amd64 /usr/local/src/prometheus/process-exporter
+  when: not file.stat.exists
+- file:
+    path: /usr/local/src/prometheus/process-exporter-0.5.0.linux-amd64.tar.gz
+    state: absent
+  when: not file.stat.exists
+- name: create process-exporter systemd
+  blockinfile:
+    path: /usr/lib/systemd/system/process-exporter.service
+    create: yes
+    block: |
+      [Unit]
+      Description=process-exporter for Prometheus
+      [Service]
+      Restart=always
+      ExecStart=/usr/local/src/prometheus/process-exporter/process-exporter \
+      ExecReload=/bin/kill -HUP $MAINPID
+      TimeoutStopSec=20s
+      SendSIGKILL=n
+      [Install]
+      WantedBy=multi-user.target
+  when: not file.stat.exists
+- name: restart process-exporter.service
+  systemd:
+    name: process-exporter.service
+    state: started
+    daemon_reload: yes
+    enabled: yes
+  when: not file.stat.exists

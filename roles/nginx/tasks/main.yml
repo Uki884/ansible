@@ -1,0 +1,27 @@
+- name: make nginx config file for laravel
+  copy:
+      dest: /etc/nginx/conf.d/laravel.conf
+      mode: 0644
+      content: |
+        server {
+          server_tokens off;
+          root /var/www/laravel/public;
+          listen 9000;
+          server_name _;
+          location /{
+            index index.php index.html;
+            try_files $uri $uri/ /index.php?$query_string;
+          }
+          location ~ \.php$ {
+            fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
+            fastcgi_index index.php;
+            include /etc/nginx/fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+          }
+        }
+- name: start nginx
+  systemd:
+    name: nginx.service
+    state: restarted
+    daemon_reload: yes
+    enabled: yes

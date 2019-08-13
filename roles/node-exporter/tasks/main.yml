@@ -1,0 +1,51 @@
+---
+- name: check exist prometheus
+  stat:
+    path: /usr/local/src/prometheus
+  register: prometheus
+- name: check exist node-exporter
+  stat:
+    path: /usr/local/src/prometheus/node_exporter
+  register: file
+- name: create prometheus directory
+  file: path=/usr/local/src/prometheus state=directory owner=root group=root mode=0755
+  when: not prometheus.stat.exists
+- name: wget node-exporter
+  get_url:
+    url: https://github.com/prometheus/node_exporter/releases/download/v0.18.1/node_exporter-0.18.1.linux-amd64.tar.gz
+    dest: /usr/local/src/prometheus/node_exporter-0.18.1.linux-amd64.tar.gz
+  when: not file.stat.exists
+- name: unarchive  node-exporter
+  unarchive:
+    src: /usr/local/src/prometheus/node_exporter-0.18.1.linux-amd64.tar.gz
+    remote_src: yes
+    dest: /usr/local/src/prometheus/
+  when: not file.stat.exists
+- name: mv process-exporter binary
+  shell: mv /usr/local/src/prometheus/node_exporter-0.18.1.linux-amd64 /usr/local/src/prometheus/node_exporter
+  when: not file.stat.exists
+- file:
+    path: /usr/local/src/prometheus/node_exporter-0.18.1.linux-amd64.tar.gz
+    state: absent
+  when: not file.stat.exists
+- name: create node-exporter systemd
+  blockinfile:
+    path: /usr/lib/systemd/system/node_exporter.service
+    create: yes
+    block: |
+      [Unit]
+      Description=Node Exporter for Prometheus
+      [Service]
+      Type=simple
+      ExecStart=/usr/local/src/prometheus/node_exporter/node_exporter
+      Restart=always
+      [Install]
+      WantedBy=multi-user.target
+  when: not file.stat.exists
+- name: start node_exporter.service
+  systemd:
+    name: node_exporter.service
+    state: started
+    daemon_reload: yes
+    enabled: yes
+  when: not file.stat.exists
