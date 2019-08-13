@@ -2,7 +2,7 @@
 127.0.0.1 ansible_connection=local
 
 [aws]
-13.115.206.70
+13.230.4.231
 
 [aws:vars]
 ansible_user=ec2-user

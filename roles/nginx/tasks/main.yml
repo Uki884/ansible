@@ -4,11 +4,16 @@
       mode: 0644
       content: |
         server {
+        listen 80;
+        server_name dev-nihon-no-kokoro.keylink.co.jp;
+        return 301 https://$host$request_uri;
+        }
+        server {
           server_tokens off;
           root /var/www/laravel/public;
-          listen 9000;
+          listen 443;
           server_name _;
-          location /{
+        location / {
             index index.php index.html;
             try_files $uri $uri/ /index.php?$query_string;
           }
