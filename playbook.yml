@@ -2,6 +2,8 @@
 - hosts: aws
   user: ec2-user
   sudo: yes
+  vars_files:
+    - ./vars/nginx.yml
   roles:
     - node-exporter
     - php

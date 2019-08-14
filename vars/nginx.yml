@@ -1,0 +1,6 @@
+virtual_src: laravel.conf.j2
+virtual_dest: /etc/nginx/conf.d/laravel.conf
+nginx_src: nginx.conf.j2
+nginx_dest: /etc/nginx/nginx.conf
+virtual_server_name: example.com
+virtual_root_path: /var/www/laravel/public
