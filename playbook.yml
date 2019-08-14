@@ -3,7 +3,7 @@
   user: ec2-user
   sudo: yes
   vars_files:
-    - ./vars/nginx.yml
+    - ./vars/variables.yml
   roles:
     - node-exporter
     - php
