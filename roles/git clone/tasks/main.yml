@@ -1,0 +1,40 @@
+---
+- name: check_repos
+  stat:
+    path: "{{ git_repo_dest }}"
+  register: check_repos
+- block:
+  - name: git clone
+    git:
+      repo: "{{ git_repo_url }}"
+      dest: "{{ git_repo_dest }}"
+      version: "{{ branch_name }}"
+  - name: disable git check permissions
+    shell: "cd {{ git_repo_dest }}; git config core.filemode false"
+  - name: change project permissions
+    file:
+      path: "{{ git_repo_dest }}"
+      recurse: yes
+      state: directory
+      owner: nginx
+      group: laravel
+      mode: '777'
+    # with_items:
+    #   - storage
+    #   - bootstrap/cache
+  - name: composer install
+    become: no
+    composer:
+      command: install
+      working_dir: "{{ git_repo_dest }}"
+  - name: create .env
+    template:
+      src: env.j2
+      dest: "{{ git_repo_dest }}/.env"
+      owner: nginx
+      group: nginx
+      mode: 0777
+  - name: generate APP_KEY
+    become: no
+    shell: "cd {{ git_repo_dest }};php artisan key:generate"
+  when: not check_repos.stat.exists

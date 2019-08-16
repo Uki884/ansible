@@ -1,0 +1,16 @@
+- name: yum basic install
+  yum:
+    name: ['zip', 'unzip', 'git', 'mysql', 'nginx', 'nodejs','git']
+    state: latest
+- name: create group
+  group:
+    name: laravel
+    state: present
+- name: add nginx to laravel group
+  user:
+    name: "{{ item.name }}"
+    append: yes
+    groups: "{{ item.group }}"
+  with_items:
+    - {name: 'nginx', group: 'laravel'}
+    - {name: 'ec2-user', group: 'laravel'}
