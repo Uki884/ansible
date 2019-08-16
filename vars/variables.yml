@@ -4,3 +4,4 @@ nginx_src: nginx.conf.j2
 nginx_dest: /etc/nginx/nginx.conf
 virtual_server_name: example.com
 virtual_root_path: /var/www/laravel/public
+db_name: ansible_test
