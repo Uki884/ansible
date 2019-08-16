@@ -29,20 +29,9 @@
     state: absent
   when: not file.stat.exists
 - name: create process-exporter systemd
-  blockinfile:
-    path: /usr/lib/systemd/system/process-exporter.service
-    create: yes
-    block: |
-      [Unit]
-      Description=process-exporter for Prometheus
-      [Service]
-      Restart=always
-      ExecStart=/usr/local/src/prometheus/process-exporter/process-exporter \
-      ExecReload=/bin/kill -HUP $MAINPID
-      TimeoutStopSec=20s
-      SendSIGKILL=n
-      [Install]
-      WantedBy=multi-user.target
+  template:
+    src: process-exporter.service.j2
+    dest: /usr/lib/systemd/system/process-exporter.service
   when: not file.stat.exists
 - name: restart process-exporter.service
   systemd:

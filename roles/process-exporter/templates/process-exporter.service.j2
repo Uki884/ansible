@@ -1,0 +1,10 @@
+[Unit]
+Description=process-exporter for Prometheus
+[Service]
+Restart=always
+ExecStart=/usr/local/src/prometheus/process-exporter/process-exporter \
+ExecReload=/bin/kill -HUP $MAINPID
+TimeoutStopSec=20s
+SendSIGKILL=n
+[Install]
+WantedBy=multi-user.target
