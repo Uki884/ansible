@@ -1,3 +1,4 @@
+---
 - name: amzn2-core.repo priority down
   replace:
     path: /etc/yum.repos.d/amzn2-core.repo

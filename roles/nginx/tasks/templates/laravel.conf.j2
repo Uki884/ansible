@@ -4,10 +4,10 @@ server {
   return 301 https://$host$request_uri;
 }
 server {
-  server_tokens off;
   root {{virtual_root_path}};
   listen 443;
   server_name {{virtual_server_name}};
+
 location / {
     index index.php index.html;
     try_files $uri $uri/ /index.php?$query_string;

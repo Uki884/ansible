@@ -1,3 +1,4 @@
+---
 - block:
   - name: remove mariadb-libs
     yum:

@@ -1,0 +1,23 @@
+---
+- name: check_repos
+  stat:
+    path: "{{ git_repo_dest }}"
+  register: check_repos
+- name: git clone
+  git:
+    repo: "https://{{ user_name }}:{{ password }}@jpkeylink.backlog.jp/git/{{ git_repo_name }}.git"
+    dest: "{{ git_repo_dest }}"
+  when: not check_repos.stat.exists
+- name: change project permissions
+  file:
+    path: "{{ git_repo_dest }}"
+    recurse: yes
+    state: directory
+    owner: nginx
+    group: nginx
+    mode: '777'
+  when: check_repos.stat.exists
+- name: composer install
+  composer:
+    command: install
+    working_dir: "{{ git_repo_dest }}"
