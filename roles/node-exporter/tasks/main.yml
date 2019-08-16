@@ -27,18 +27,9 @@
       path: /usr/local/src/prometheus/node_exporter-0.18.1.linux-amd64.tar.gz
       state: absent
   - name: create node-exporter systemd
-    blockinfile:
-      path: /usr/lib/systemd/system/node_exporter.service
-      create: yes
-      block: |
-        [Unit]
-        Description=Node Exporter for Prometheus
-        [Service]
-        Type=simple
-        ExecStart=/usr/local/src/prometheus/node_exporter/node_exporter
-        Restart=always
-        [Install]
-        WantedBy=multi-user.target
+    template:
+      src: node_exporter.service.j2
+      dest: /usr/lib/systemd/system/node_exporter.service
   - name: start node_exporter.service
     systemd:
       name: node_exporter.service
