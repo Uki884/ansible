@@ -1,4 +1,4 @@
-# AmazonLinux2のLaravel + mysql５．７ + nginx 環境をansibleで構築する！
+# AmazonLinux2のLaravel + mysql5.7 + nginx 環境をansibleで構築する！
 1. node-exporter    
    * インストール
    * サービス起動
