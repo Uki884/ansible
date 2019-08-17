@@ -37,4 +37,8 @@
   - name: generate APP_KEY
     become: no
     shell: "cd {{ git_repo_dest }};php artisan key:generate"
+  - name: migration DB
+    shell: "cd {{ git_repo_dest }}; php artisan migrate"
+    register: migrate_result
+    changed_when: "migrate_result.stdout != 'Nothing to migrate.'"
   when: not check_repos.stat.exists

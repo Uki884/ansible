@@ -1,3 +1,29 @@
+- name: amzn2-core.repo priority down
+  replace:
+    path: /etc/yum.repos.d/amzn2-core.repo
+    regexp: 'priority=10'
+    replace: 'priority=99'
+  when: ansible_facts['distribution'] == "Amazon"
+- name: amzn2-extras.repo priority down
+  replace:
+    path: /etc/yum.repos.d/amzn2-extras.repo
+    regexp: 'priority = 10'
+    replace: 'priority=99'
+  when: ansible_facts['distribution'] == "Amazon"
+- name: check exists EPEL
+  shell: amazon-linux-extras list | grep epel
+  register: epel_check
+  failed_when: epel_check.rc not in [0,1]
+  when: ansible_facts['distribution'] == "Amazon"
+- name: install EPEL when amazon linux
+  shell: amazon-linux-extras install -y epel
+  when: ansible_facts['distribution'] == "Amazon" and epel_check.rc == 0
+- name: install EPEL when other linux
+  yum:
+    name: ['epel-release','https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm']
+  when:
+    - ansible_facts['distribution'] == "CentOS"
+    - ansible_facts['distribution_major_version'] == "7"
 - name: yum basic install
   yum:
     name: ['zip', 'unzip', 'git', 'mysql', 'nginx', 'nodejs','git']
