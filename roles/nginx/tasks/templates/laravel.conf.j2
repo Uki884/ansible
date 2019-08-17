@@ -1,11 +1,6 @@
 server {
-  listen 80;
-  server_name {{virtual_server_name}};
-  return 301 https://$host$request_uri;
-}
-server {
   root {{virtual_root_path}};
-  listen 443;
+  listen 80;
   server_name {{virtual_server_name}};
 
 location / {
@@ -17,5 +12,8 @@ location / {
     fastcgi_index index.php;
     include /etc/nginx/fastcgi_params;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+  }
+    location /.well-known/ {
+    default_type "text/plain";
   }
 }

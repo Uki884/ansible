@@ -1,0 +1,23 @@
+---
+- name: install python-simplejson
+  yum:
+    name: ['python-simplejson','openssl']
+    state: present
+- name: install letsencrypt
+  yum:
+    name: ['letsencrypt']
+    state: present
+- name: check letsencrypt folder
+  stat:
+    path: "/etc/letsencrypt/live/{{virtual_server_name}}"
+  register: letsencrypt
+- name: Create SSL/TLS certificates
+  shell: "letsencrypt certonly --webroot -w {{ virtual_root_path }} -d {{ virtual_server_name }} --email {{ ssl_email }} --agree-tos --keep-until-expiring --non-interactive --debug"
+  when: not letsencrypt.stat.exists
+- name: add virtualhost.conf for certificates settings
+  template:
+    src: laravel-ssl.conf.j2
+    dest: /etc/nginx/conf.d/laravel.conf
+    when: not letsencrypt.stat.exists
+  notify:
+    - restart nginx

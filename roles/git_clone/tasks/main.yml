@@ -22,9 +22,15 @@
   when: not check_repos.stat.exists
 - name: composer install
   become: no
-  composer:
-    command: install
-    working_dir: "{{ git_repo_dest }}"
+  shell: "cd {{ git_repo_dest }}; composer install "
+  # composer:
+  #   command: install
+  #   working_dir: "{{ git_repo_dest }}"
+# - name: composer update
+#   become: no
+#   composer:
+#     command: update
+#     working_dir: "{{ git_repo_dest }}"
 - name: create .env
   template:
     src: env.j2

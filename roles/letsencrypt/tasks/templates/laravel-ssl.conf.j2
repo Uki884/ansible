@@ -1,0 +1,31 @@
+server {
+  listen 80;
+  server_name {{virtual_server_name}};
+  return 301 https://$host$request_uri;
+}
+server {
+  listen 443;
+  server_name {{virtual_server_name}};
+  root {{virtual_root_path}};
+
+  client_max_body_size 10m;
+  ssl                  on;
+  ssl_certificate     /etc/letsencrypt/live/{{virtual_server_name}}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/{{virtual_server_name}}/privkey.pem;
+  ssl_prefer_server_ciphers     on;
+  ssl_protocols     SSLv3 TLSv1 TLSv1.1 TLSv1.2;
+
+  location / {
+    index index.php index.html;
+    try_files $uri $uri/ /index.php?$query_string;
+  }
+  location ~ \.php$ {
+    fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
+    fastcgi_index index.php;
+    include /etc/nginx/fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+  }
+    location /.well-known/ {
+    default_type "text/plain";
+  }
+}

@@ -16,7 +16,7 @@
     - { regexp: "^;date.timezone =", replace: "date.timezone = Asia/Tokyo" }
     - { regexp: "^expose_php = On", replace: "expose_php = Off" }
     - { regexp: "^upload_max_filesize = .*$", replace: "upload_max_filesize = 256M" }
-    - { regexp: "^memory_limit = .*$", replace: "memory_limit = 256M" }
+    - { regexp: "^memory_limit = .*$", replace: "memory_limit = 1024M" }
 - name: modify php-fpm config file
   replace:
     dest: /etc/php-fpm.d/www.conf
@@ -28,6 +28,10 @@
     - { regexp: "^listen = 127.0.0.1:9000", replace: "listen = /var/run/php-fpm/php-fpm.sock" }
     - { regexp: "^;listen.owner = nobody", replace: "listen.owner = nginx" }
     - { regexp: "^;listen.group = nobody", replace: "listen.group = nginx" }
+- name: make php-fpm.conf
+  template:
+    src: php-fpm.conf.j2
+    dest: /etc/nginx/conf.d/php-fpm.conf
 - name: start php-fpm
   systemd:
     name: php-fpm.service
