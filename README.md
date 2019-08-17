@@ -1,4 +1,4 @@
-# ansibleでAmazonLinux2 + Laravel + mysql5.7 + nginx 環境を構築する！
+# ansibleでAmazonLinux2 + Laravel + mysql5.7 + nginx + SSL 環境を構築する！
 1. node-exporter    
    * インストール
    * サービス起動
@@ -23,7 +23,7 @@
 7. project clone
    * backlogからクローン
 8. let's encryptでSSL化
-9. * 指定したドメインをSSL化
+   * 指定したドメインをSSL化
 # 使い方
 ## brewを使ってansibleインストール
 ```
@@ -51,14 +51,36 @@ ansible_ssh_private_key_file=pemキーがおいてあるフォルダ　#例 /Use
 
 ```
 ## 変数ファイルを環境に応じて変更
+### variables.ymlをコピー
+```
+cp variables.example.yml variables.yml
+```
+### variables.yml修正
 /vars/variables.yml
 ```
-virtual_src: laravel.conf.j2
-virtual_dest: /etc/nginx/conf.d/laravel.conf
-nginx_src: nginx.conf.j2
-nginx_dest: /etc/nginx/nginx.conf
-virtual_server_name: example.com
-virtual_root_path: /var/www/laravel/public
+---
+# nginx
+virtual_server_name: example.com #ドメイン名
+virtual_root_path: "{{git_repo_dest}}/public" #プロジェクトのrootパス
+# db
+db_name: ansible_test #db名
+db_user: root
+db_password: root
+#git
+git_repo_url: "https://{{ user_name }}:{{ password }}@****.backlog.jp/git/{{ git_repo_name }}.git"
+git_repo_name: Laravel #リポジトリの名前
+git_repo_dest: /www/laravel #clone先
+git_branch_name: develop #cloneするブランチ
+#Laravel .env
+MAIL_DRIVER: sendmail
+MAIL_HOST: locahost
+MAIL_PORT: 25
+MAIL_USERNAME: null
+MAIL_PASSWORD: null
+MAIL_FROM_ADDRESS: example@example.com
+MAIL_FROM_NAME: example@example.com
+#SSL(let's encrypt)
+ssl_email: example@example.com
 
 ```
 ## ansible実行
