@@ -24,6 +24,11 @@
    * backlogからクローン
 8. let's encryptでSSL化
    * 指定したドメインをSSL化
+9. Laravel 
+   * .env コピー＆設定変更
+   * composer install
+   * php artisan key:generate
+   * php artisan migrate
 # 使い方
 ## brewを使ってansibleインストール
 ```
