@@ -14,7 +14,7 @@ db_password: root
 git_repo_url: "https://{{ user_name }}:{{ password }}@****.backlog.jp/git/{{ git_repo_name }}.git"
 git_repo_name: Laravel #リポジトリの名前
 git_repo_dest: /www/laravel #clone先
-branch_name: develop #cloneするブランチ
+git_branch_name: develop #cloneするブランチ
 #Laravel .env
 MAIL_DRIVER: sendmail
 MAIL_HOST: locahost
