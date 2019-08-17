@@ -1,25 +1,18 @@
-# AmazonLinux2のLaravel + mysql5.7 + nginx 環境をansibleで構築する！
+# ansibleでAmazonLinux2 + Laravel + mysql5.7 + nginx 環境を構築する！
 1. node-exporter    
    * インストール
    * サービス起動
    * 自動起動設定
 2. php
-   * インストール
    * 各種モジュールインストール  
    php72,php-cli,php-gd,php-mysqlnd,php-mbstring,php-mcrypt,php-pdo,php-xml,php-fpm,php-json  
    * php.ini設定  
 3. php-fpm
-   * インストール
    * nginx連携設定
-   * サービス起動
-   * 自動起動設定
 4. nginx  
-   * インストール
    * nginx.conf配置
    * virtualserver.conf配置
-   * サービス起動
-   * 自動起動設定
-5. mysql
+5. mysql5.7
    * mariadb削除
    * mysql5.7インストール
    * 不要ユーザー削除
@@ -27,7 +20,10 @@
    * database作成
 6. composer
    * インストール
-   * パス通す
+7. project clone
+   * backlogからクローン
+8. let's encryptでSSL化
+9. * 指定したドメインをSSL化
 # 使い方
 ## brewを使ってansibleインストール
 ```

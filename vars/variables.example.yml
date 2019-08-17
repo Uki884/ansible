@@ -1,9 +1,5 @@
 ---
 # nginx
-virtual_src: laravel.conf.j2
-virtual_dest: /etc/nginx/conf.d/laravel.conf
-nginx_src: nginx.conf.j2
-nginx_dest: /etc/nginx/nginx.conf
 virtual_server_name: example.com #ドメイン名
 virtual_root_path: "{{git_repo_dest}}/public" #プロジェクトのrootパス
 # db
@@ -23,3 +19,5 @@ MAIL_USERNAME: null
 MAIL_PASSWORD: null
 MAIL_FROM_ADDRESS: example@example.com
 MAIL_FROM_NAME: example@example.com
+#SSL(let's encrypt)
+ssl_email: example@example.com
