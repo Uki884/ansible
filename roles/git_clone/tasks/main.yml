@@ -23,14 +23,10 @@
 - name: composer install
   become: no
   shell: "cd {{ git_repo_dest }}; composer install "
-  # composer:
-  #   command: install
-  #   working_dir: "{{ git_repo_dest }}"
-# - name: composer update
-#   become: no
-#   composer:
-#     command: update
-#     working_dir: "{{ git_repo_dest }}"
+- name: check_env
+  stat:
+    path: "{{ git_repo_dest }}/.env"
+  register: check_env
 - name: create .env
   template:
     src: env.j2
@@ -38,11 +34,11 @@
     owner: nginx
     group: laravel
     mode: 0777
-  register: env_result
+  when: not check_env.stat.exists
 - name: generate APP_KEY
   become: no
   shell: "cd {{ git_repo_dest }};php artisan key:generate"
-  when: env_result is changed
+  when: not check_env.stat.exists
 - name: migration DB
   shell: "cd {{ git_repo_dest }}; php artisan migrate"
   register: migrate_result
