@@ -1,4 +1,4 @@
-# ansibleでAmazonLinux2 + Laravel + mysql5.7 + nginx + SSL 環境を構築する！
+# ansibleでAmazonLinux2 + Laravel + mysql5.7 + nginx + SSL 環境を構築
 1. node-exporter    
    * インストール
    * サービス起動
