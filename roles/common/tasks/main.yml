@@ -1,3 +1,6 @@
+- name: set hostname
+  hostname:
+    name: "{{virtual_server_name}}"
 - name: amzn2-core.repo priority down
   replace:
     path: /etc/yum.repos.d/amzn2-core.repo

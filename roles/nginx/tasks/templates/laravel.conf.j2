@@ -4,6 +4,7 @@ server {
   server_name {{virtual_server_name}};
 
 location / {
+    client_max_body_size 10m;
     index index.php index.html;
     try_files $uri $uri/ /index.php?$query_string;
   }
